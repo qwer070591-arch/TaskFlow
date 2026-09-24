@@ -104,3 +104,16 @@ export interface CreateProjectInput {
   name: string
   startDate: string
 }
+
+export interface CreateTaskInput {
+  assigneeId: string
+  dueDate: string
+  priority: TaskPriority
+  projectId: string
+  status: TaskStatus
+  title: string
+}
+
+export interface TaskBoardItem extends ProjectTask {
+  projectName: string
+}

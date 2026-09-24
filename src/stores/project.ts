@@ -10,6 +10,7 @@ import {
 } from '../data/dashboard'
 import type {
   CreateProjectInput,
+  CreateTaskInput,
   DashboardActivity,
   Project,
   ProjectOverview,
@@ -18,6 +19,9 @@ import type {
   ProjectStatus,
   ProjectSummary,
   ProjectTask,
+  TaskBoardItem,
+  TaskPriority,
+  TaskStatus,
 } from '../types/dashboard'
 
 const upcomingProjectCutoff = '2026-10-09'
@@ -34,6 +38,10 @@ export const useProjectStore = defineStore('project', () => {
   const searchQuery = ref('')
   const statusFilter = ref<ProjectStatus | 'all'>('all')
   const sortBy = ref<ProjectSort>('updated')
+  const taskSearchQuery = ref('')
+  const taskProjectFilter = ref('all')
+  const taskPriorityFilter = ref<TaskPriority | 'all'>('all')
+  const taskAssigneeFilter = ref('all')
 
   const projectSummaries = computed<ProjectSummary[]>(() =>
     projects.value.map((project) => {
@@ -79,6 +87,29 @@ export const useProjectStore = defineStore('project', () => {
     ).length,
   }))
 
+  const filteredTasks = computed<TaskBoardItem[]>(() => {
+    const query = taskSearchQuery.value.trim().toLocaleLowerCase('zh-TW')
+    return tasks.value.flatMap((task) => {
+      const project = projects.value.find((item) => item.id === task.projectId)
+      const assignee = teamMembers.value.find((member) => member.id === task.assigneeId)
+      if (!project || !assignee) return []
+      const matches = task.title.toLocaleLowerCase('zh-TW').includes(query) &&
+        (taskProjectFilter.value === 'all' || task.projectId === taskProjectFilter.value) &&
+        (taskPriorityFilter.value === 'all' || task.priority === taskPriorityFilter.value) &&
+        (taskAssigneeFilter.value === 'all' || task.assigneeId === taskAssigneeFilter.value)
+      return matches ? [{ ...task, projectName: project.name, assignee }] : []
+    })
+  })
+
+  const taskStatistics = computed(() => ({
+    total: tasks.value.length,
+    todo: tasks.value.filter((task) => task.status === 'todo').length,
+    inProgress: tasks.value.filter((task) => task.status === 'in-progress').length,
+    review: tasks.value.filter((task) => task.status === 'review').length,
+    done: tasks.value.filter((task) => task.status === 'done').length,
+    overdue: tasks.value.filter((task) => task.status !== 'done' && task.dueDate < dashboardReferenceDate).length,
+  }))
+
   function clearFilters() {
     searchQuery.value = ''
     statusFilter.value = 'all'
@@ -101,6 +132,22 @@ export const useProjectStore = defineStore('project', () => {
     projects.value.unshift(createdProject)
     return createdProject
   }
+
+  function createTask(input: CreateTaskInput) {
+    const task = { id: `task-${crypto.randomUUID()}`, ...input, completedAt: input.status === 'done' ? dashboardReferenceDate : undefined }
+    tasks.value.unshift(task)
+    return task
+  }
+
+  function updateTaskStatus(taskId: string, status: TaskStatus) {
+    const task = tasks.value.find((item) => item.id === taskId)
+    if (!task) return false
+    task.status = status
+    task.completedAt = status === 'done' ? dashboardReferenceDate : undefined
+    return true
+  }
+
+  function clearTaskFilters() { taskSearchQuery.value = ''; taskProjectFilter.value = 'all'; taskPriorityFilter.value = 'all'; taskAssigneeFilter.value = 'all' }
 
   function getProjectById(projectId: string) {
     return projectSummaries.value.find((project) => project.id === projectId)
@@ -143,8 +190,11 @@ export const useProjectStore = defineStore('project', () => {
 
   return {
     activities,
+    clearTaskFilters,
     clearFilters,
     createProject,
+    createTask,
+    filteredTasks,
     filteredProjects,
     getActivitiesByProject,
     getMembersByProject,
@@ -158,6 +208,12 @@ export const useProjectStore = defineStore('project', () => {
     statistics,
     statusFilter,
     tasks,
+    taskAssigneeFilter,
+    taskPriorityFilter,
+    taskProjectFilter,
+    taskSearchQuery,
+    taskStatistics,
     teamMembers,
+    updateTaskStatus,
   }
 })
