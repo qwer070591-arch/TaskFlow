@@ -4,6 +4,13 @@ test('redirects to the dashboard and navigates between placeholder views', async
   await page.goto('/')
 
   await expect(page).toHaveURL(/\/dashboard$/)
+  await expect(page.getByRole('region', { name: '工作摘要' }).getByRole('article')).toHaveCount(4)
+  await expect(page.getByRole('heading', { name: '任務趨勢' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '任務狀態' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '專案進度' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '即將到期任務' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '最近動態' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '團隊工作量' })).toBeVisible()
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('儀表板')
 
   const destinations = [
@@ -23,6 +30,12 @@ test('redirects to the dashboard and navigates between placeholder views', async
 test('opens and closes the mobile navigation drawer with focus restoration', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/dashboard')
+
+  await expect(page.getByRole('heading', { name: '任務趨勢' })).toBeVisible()
+  const hasHorizontalOverflow = await page.locator('html').evaluate(
+    (element) => element.scrollWidth > element.clientWidth,
+  )
+  expect(hasHorizontalOverflow).toBe(false)
 
   const menuButton = page.getByRole('button', { name: '開啟導覽選單' })
   await menuButton.click()
