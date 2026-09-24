@@ -10,6 +10,7 @@ import {
 } from '../data/dashboard'
 import type {
   CreateProjectInput,
+  CreateMemberInput,
   CreateTaskInput,
   DashboardActivity,
   Project,
@@ -22,7 +23,11 @@ import type {
   TaskBoardItem,
   TaskPriority,
   TaskStatus,
+  TeamMemberOverview,
+  TeamStatistics,
+  WorkloadLevel,
 } from '../types/dashboard'
+import { getInitials, getWorkloadLevel } from '../utils/team'
 
 const upcomingProjectCutoff = '2026-10-09'
 
@@ -42,6 +47,8 @@ export const useProjectStore = defineStore('project', () => {
   const taskProjectFilter = ref('all')
   const taskPriorityFilter = ref<TaskPriority | 'all'>('all')
   const taskAssigneeFilter = ref('all')
+  const teamSearchQuery = ref('')
+  const teamWorkloadFilter = ref<WorkloadLevel | 'all'>('all')
 
   const projectSummaries = computed<ProjectSummary[]>(() =>
     projects.value.map((project) => {
@@ -110,6 +117,26 @@ export const useProjectStore = defineStore('project', () => {
     overdue: tasks.value.filter((task) => task.status !== 'done' && task.dueDate < dashboardReferenceDate).length,
   }))
 
+  const filteredTeamMembers = computed(() => {
+    const query = teamSearchQuery.value.trim().toLocaleLowerCase('zh-TW')
+    return teamMembers.value.filter((member) => {
+      const matchesQuery = [member.name, member.role]
+        .some((value) => value.toLocaleLowerCase('zh-TW').includes(query))
+      const matchesWorkload = teamWorkloadFilter.value === 'all' ||
+        getWorkloadLevel(member.workload) === teamWorkloadFilter.value
+      return matchesQuery && matchesWorkload
+    })
+  })
+
+  const teamStatistics = computed<TeamStatistics>(() => ({
+    totalMemberCount: teamMembers.value.length,
+    availableMemberCount: teamMembers.value.filter((member) => member.workload < 80).length,
+    activeTaskCount: tasks.value.filter((task) => task.status !== 'done').length,
+    averageWorkload: teamMembers.value.length
+      ? Math.round(teamMembers.value.reduce((total, member) => total + member.workload, 0) / teamMembers.value.length)
+      : 0,
+  }))
+
   function clearFilters() {
     searchQuery.value = ''
     statusFilter.value = 'all'
@@ -139,6 +166,19 @@ export const useProjectStore = defineStore('project', () => {
     return task
   }
 
+  function createMember(input: CreateMemberInput) {
+    const name = input.name.trim()
+    const member = {
+      id: `member-${crypto.randomUUID()}`,
+      name,
+      role: input.role.trim(),
+      initials: input.initials?.trim().toUpperCase() || getInitials(name),
+      workload: 0,
+    }
+    teamMembers.value.push(member)
+    return member
+  }
+
   function updateTaskStatus(taskId: string, status: TaskStatus) {
     const task = tasks.value.find((item) => item.id === taskId)
     if (!task) return false
@@ -148,6 +188,11 @@ export const useProjectStore = defineStore('project', () => {
   }
 
   function clearTaskFilters() { taskSearchQuery.value = ''; taskProjectFilter.value = 'all'; taskPriorityFilter.value = 'all'; taskAssigneeFilter.value = 'all' }
+
+  function clearTeamFilters() {
+    teamSearchQuery.value = ''
+    teamWorkloadFilter.value = 'all'
+  }
 
   function getProjectById(projectId: string) {
     return projectSummaries.value.find((project) => project.id === projectId)
@@ -164,6 +209,41 @@ export const useProjectStore = defineStore('project', () => {
 
   function getMembersByProject(projectId: string) {
     return getProjectById(projectId)?.members ?? []
+  }
+
+  function getMemberById(memberId: string) {
+    return teamMembers.value.find((member) => member.id === memberId)
+  }
+
+  function getProjectsByMember(memberId: string) {
+    return projects.value.filter((project) => project.memberIds.includes(memberId))
+  }
+
+  function getTasksByMember(memberId: string) {
+    return tasks.value.filter((task) => task.assigneeId === memberId)
+  }
+
+  function getActiveTasksByMember(memberId: string) {
+    return getTasksByMember(memberId).filter((task) => task.status !== 'done')
+  }
+
+  function getCompletedTasksByMember(memberId: string) {
+    return getTasksByMember(memberId).filter((task) => task.status === 'done')
+  }
+
+  function getMemberOverview(memberId: string): TeamMemberOverview | undefined {
+    const member = getMemberById(memberId)
+    if (!member) return undefined
+
+    const memberTasks = getTasksByMember(memberId)
+    const activeTasks = getActiveTasksByMember(memberId)
+    return {
+      member,
+      activeProjectCount: getProjectsByMember(memberId).filter((project) => project.status !== 'completed').length,
+      activeTaskCount: activeTasks.length,
+      completedTaskCount: memberTasks.filter((task) => task.status === 'done').length,
+      totalTaskCount: memberTasks.length,
+    }
   }
 
   function getActivitiesByProject(projectId: string): DashboardActivity[] {
@@ -190,14 +270,23 @@ export const useProjectStore = defineStore('project', () => {
 
   return {
     activities,
+    clearTeamFilters,
     clearTaskFilters,
     clearFilters,
     createProject,
+    createMember,
     createTask,
     filteredTasks,
+    filteredTeamMembers,
     filteredProjects,
     getActivitiesByProject,
+    getActiveTasksByMember,
+    getCompletedTasksByMember,
+    getMemberById,
+    getMemberOverview,
     getMembersByProject,
+    getProjectsByMember,
+    getTasksByMember,
     getOverviewByProject,
     getProjectById,
     getTasksByProject,
@@ -213,7 +302,10 @@ export const useProjectStore = defineStore('project', () => {
     taskProjectFilter,
     taskSearchQuery,
     taskStatistics,
+    teamSearchQuery,
     teamMembers,
+    teamStatistics,
+    teamWorkloadFilter,
     updateTaskStatus,
   }
 })

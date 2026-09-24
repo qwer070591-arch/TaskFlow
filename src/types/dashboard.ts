@@ -39,6 +39,29 @@ export interface TeamMember {
   workload: number
 }
 
+export type WorkloadLevel = 'low' | 'normal' | 'high'
+
+export interface CreateMemberInput {
+  initials?: string
+  name: string
+  role: string
+}
+
+export interface TeamMemberOverview {
+  activeProjectCount: number
+  activeTaskCount: number
+  completedTaskCount: number
+  member: TeamMember
+  totalTaskCount: number
+}
+
+export interface TeamStatistics {
+  activeTaskCount: number
+  availableMemberCount: number
+  averageWorkload: number
+  totalMemberCount: number
+}
+
 export interface Activity {
   id: string
   memberId: string

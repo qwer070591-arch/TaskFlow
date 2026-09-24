@@ -182,7 +182,8 @@ test('filters, creates, and moves tasks through the Kanban board', async ({ page
   await componentTask.getByRole('button', { name: /\u8b8a\u66f4.*\u72c0\u614b/ }).click()
   const statusMenu = componentTask.getByRole('menu')
   await expect(statusMenu.getByRole('menuitem', { name: '\u79fb\u81f3\u5df2\u5b8c\u6210' })).toBeVisible()
-  await statusMenu.getByRole('menuitem', { name: '\u79fb\u81f3\u5df2\u5b8c\u6210' }).click()
+  await statusMenu.getByRole('menuitem', { name: '\u79fb\u81f3\u5df2\u5b8c\u6210' }).focus()
+  await page.keyboard.press('Enter')
   await expect(
     page.locator('.column').filter({ has: page.getByRole('heading', { name: '\u9032\u884c\u4e2d' }) }).getByText('2', { exact: true }),
   ).toBeVisible()
@@ -221,4 +222,71 @@ test('moves a task with the native drag and drop handlers', async ({ page }) => 
   await expect(
     page.locator('.column').filter({ has: page.getByRole('heading', { name: '\u5be9\u6838\u4e2d' }) }).getByText('3', { exact: true }),
   ).toBeVisible()
+})
+
+test('manages team members with shared relationships, drawers, and creation feedback', async ({ page }) => {
+  await page.goto('/team')
+
+  await expect(page).toHaveURL(/\/team$/)
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('\u5718\u968a')
+  const memberGrid = page.getByRole('region', { name: '\u5718\u968a\u6210\u54e1' })
+  await expect(memberGrid.getByRole('article')).toHaveCount(4)
+
+  await page.getByLabel('\u641c\u5c0b\u6210\u54e1').fill('Jack')
+  await expect(memberGrid.getByRole('article')).toHaveCount(1)
+  await page.getByLabel('\u641c\u5c0b\u6210\u54e1').fill('')
+
+  const workloadFilter = page.getByRole('combobox', { name: '\u5de5\u4f5c\u8ca0\u8f09', exact: true })
+  await workloadFilter.selectOption('high')
+  await expect(memberGrid.getByRole('article')).toHaveCount(1)
+  await workloadFilter.selectOption('low')
+  await expect(page.getByRole('heading', { name: '\u627e\u4e0d\u5230\u7b26\u5408\u689d\u4ef6\u7684\u6210\u54e1' })).toBeVisible()
+  await page.getByRole('button', { name: '\u6e05\u9664\u7be9\u9078' }).click()
+  await expect(memberGrid.getByRole('article')).toHaveCount(4)
+
+  const jackDetailButton = page.getByRole('button', { name: '\u67e5\u770b Jack Chen \u8a73\u60c5' })
+  await jackDetailButton.click()
+  const drawer = page.getByRole('dialog', { name: /Jack Chen/ })
+  await expect(drawer.getByRole('list').nth(0).getByRole('listitem')).toHaveCount(3)
+  await expect(drawer.getByRole('list').nth(1).getByRole('listitem')).toHaveCount(2)
+  await expect(drawer.getByRole('list').nth(2).getByRole('listitem')).toHaveCount(1)
+  await page.keyboard.press('Escape')
+  await expect(drawer).toBeHidden()
+  await expect(jackDetailButton).toBeFocused()
+
+  const createButton = page.getByRole('button', { name: '\u65b0\u589e\u6210\u54e1' })
+  await createButton.click()
+  const createDialog = page.getByRole('dialog', { name: '\u65b0\u589e\u6210\u54e1' })
+  await createDialog.getByRole('button', { name: '\u5efa\u7acb\u6210\u54e1' }).click()
+  await expect(createDialog.getByRole('alert')).toHaveCount(2)
+  await createDialog.getByLabel('\u59d3\u540d').fill('Mia Chen')
+  await createDialog.getByLabel('\u8077\u4f4d').fill('\u524d\u7aef\u5de5\u7a0b\u5e2b')
+  await createDialog.getByRole('button', { name: '\u5efa\u7acb\u6210\u54e1' }).click()
+  await expect(createDialog).toBeHidden()
+  await expect(page.getByRole('status')).toBeVisible()
+  await expect(page.getByRole('article').filter({ hasText: 'Mia Chen' })).toBeVisible()
+
+  await page.getByRole('button', { name: '\u67e5\u770b Mia Chen \u8a73\u60c5' }).click()
+  const newMemberDrawer = page.getByRole('dialog', { name: /Mia Chen/ })
+  await expect(newMemberDrawer.getByText('\u76ee\u524d\u6c92\u6709\u53c3\u8207\u4e2d\u7684\u5c08\u6848')).toBeVisible()
+  await expect(newMemberDrawer.getByText('\u76ee\u524d\u6c92\u6709\u9032\u884c\u4e2d\u7684\u4efb\u52d9')).toBeVisible()
+  await expect(newMemberDrawer.getByText('\u5c1a\u7121\u5df2\u5b8c\u6210\u4efb\u52d9')).toBeVisible()
+  await page.keyboard.press('Escape')
+
+  await createButton.click()
+  await expect(createDialog).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect(createDialog).toBeHidden()
+  await expect(createButton).toBeFocused()
+})
+
+test('keeps the team layout within the mobile viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/team')
+
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('\u5718\u968a')
+  const hasHorizontalOverflow = await page.locator('html').evaluate(
+    (element) => element.scrollWidth > element.clientWidth,
+  )
+  expect(hasHorizontalOverflow).toBe(false)
 })
