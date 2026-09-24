@@ -186,6 +186,7 @@ export const mockActivities: Activity[] = [
   {
     id: 'activity-1',
     memberId: 'member-chen',
+    projectId: 'project-brand-site',
     type: 'completed',
     message: '完成「首頁互動原型」',
     timestamp: '2026-09-25T09:42:00+08:00',
@@ -193,6 +194,7 @@ export const mockActivities: Activity[] = [
   {
     id: 'activity-2',
     memberId: 'member-wang',
+    projectId: 'project-mobile-onboarding',
     type: 'moved',
     message: '將「行動版設計審查」移至審核中',
     timestamp: '2026-09-25T09:10:00+08:00',
@@ -200,6 +202,7 @@ export const mockActivities: Activity[] = [
   {
     id: 'activity-3',
     memberId: 'member-lin',
+    projectId: 'project-brand-site',
     type: 'updated',
     message: '更新「品牌網站改版」進度至 72%',
     timestamp: '2026-09-25T08:35:00+08:00',
@@ -207,6 +210,7 @@ export const mockActivities: Activity[] = [
   {
     id: 'activity-4',
     memberId: 'member-hsu',
+    projectId: 'project-mobile-onboarding',
     type: 'created',
     message: '建立任務「整理使用者訪談重點」',
     timestamp: '2026-09-24T16:20:00+08:00',

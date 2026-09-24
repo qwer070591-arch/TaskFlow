@@ -48,6 +48,7 @@ defineProps<{
         </li>
       </ul>
     </div>
+    <RouterLink class="project-card__link" :to="`/projects/${project.id}`">查看專案</RouterLink>
   </article>
 </template>
 
@@ -208,6 +209,19 @@ strong {
 
 .project-card__members li:first-child {
   margin-left: 0;
+}
+
+.project-card__link {
+  color: var(--color-accent-strong);
+  display: inline-block;
+  font-size: 0.8125rem;
+  font-weight: 750;
+  margin-top: var(--space-5);
+  text-decoration: none;
+}
+
+.project-card__link:hover {
+  text-decoration: underline;
 }
 
 @media (max-width: 31rem) {

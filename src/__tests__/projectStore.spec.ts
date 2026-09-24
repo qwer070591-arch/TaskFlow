@@ -44,4 +44,25 @@ describe('project store', () => {
       totalTaskCount: 0,
     })
   })
+
+  it('selects a project and its related tasks, members, activities, and overview', () => {
+    const projectStore = useProjectStore()
+
+    expect(projectStore.getProjectById('project-brand-site')?.name).toBe('品牌網站改版')
+    expect(projectStore.getTasksByProject('project-brand-site')).toHaveLength(4)
+    expect(projectStore.getMembersByProject('project-brand-site').map((member) => member.name)).toEqual([
+      'Jason Lin',
+      'Jack Chen',
+      'Emma Wang',
+    ])
+    expect(projectStore.getActivitiesByProject('project-brand-site')).toHaveLength(2)
+    expect(projectStore.getOverviewByProject('project-brand-site')).toEqual({
+      totalTaskCount: 4,
+      completedTaskCount: 1,
+      activeTaskCount: 2,
+      memberCount: 3,
+    })
+    expect(projectStore.getProjectById('missing-project')).toBeUndefined()
+    expect(projectStore.getOverviewByProject('missing-project')).toBeUndefined()
+  })
 })

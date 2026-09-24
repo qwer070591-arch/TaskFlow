@@ -1,7 +1,7 @@
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { defineStore, storeToRefs } from 'pinia'
 
-import { dashboardReferenceDate, mockActivities } from '../data/dashboard'
+import { dashboardReferenceDate } from '../data/dashboard'
 import type {
   CompletionTrendPoint,
   DashboardActivity,
@@ -32,8 +32,7 @@ function formatShortDate(date: string) {
 
 export const useDashboardStore = defineStore('dashboard', () => {
   const projectStore = useProjectStore()
-  const { projects, tasks, teamMembers } = storeToRefs(projectStore)
-  const activities = ref(mockActivities)
+  const { activities, projects, tasks, teamMembers } = storeToRefs(projectStore)
 
   const dashboardTasks = computed<DashboardTask[]>(() =>
     tasks.value.flatMap((task) => {

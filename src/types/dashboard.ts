@@ -42,6 +42,7 @@ export interface TeamMember {
 export interface Activity {
   id: string
   memberId: string
+  projectId: string
   type: ActivityType
   message: string
   timestamp: string
@@ -70,6 +71,17 @@ export interface DashboardActivity extends Activity {
 
 export interface TeamWorkload extends TeamMember {
   activeTaskCount: number
+}
+
+export interface ProjectTask extends Task {
+  assignee?: TeamMember
+}
+
+export interface ProjectOverview {
+  activeTaskCount: number
+  completedTaskCount: number
+  memberCount: number
+  totalTaskCount: number
 }
 
 export interface ProjectSummary extends Project {

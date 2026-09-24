@@ -100,3 +100,33 @@ test('keeps the projects layout within the mobile viewport', async ({ page }) =>
   )
   expect(hasHorizontalOverflow).toBe(false)
 })
+
+test('opens project detail, returns to projects, and handles an invalid project id', async ({ page }) => {
+  await page.goto('/projects')
+  await page.getByRole('link', { name: '查看專案' }).first().click()
+
+  await expect(page).toHaveURL(/\/projects\/project-brand-site$/)
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('品牌網站改版')
+  await expect(page.getByRole('region', { name: '專案總覽' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '專案任務' })).toBeVisible()
+  await expect(page.getByText('整合新版元件樣式')).toBeVisible()
+  await expect(page.getByRole('heading', { name: '專案成員' })).toBeVisible()
+  await expect(
+    page.getByRole('region', { name: '專案成員' }).getByRole('heading', { name: 'Jason Lin' }),
+  ).toBeVisible()
+  await expect(page.getByRole('heading', { name: '最近活動' })).toBeVisible()
+  await expect(page.getByText('完成「首頁互動原型」')).toBeVisible()
+
+  await page.getByRole('link', { name: '返回專案' }).click()
+  await expect(page).toHaveURL(/\/projects$/)
+
+  await page.goto('/projects/not-found')
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('找不到此專案')
+
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/projects/project-brand-site')
+  const hasHorizontalOverflow = await page.locator('html').evaluate(
+    (element) => element.scrollWidth > element.clientWidth,
+  )
+  expect(hasHorizontalOverflow).toBe(false)
+})

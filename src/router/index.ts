@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import DashboardView from '../views/DashboardView.vue'
+import ProjectDetailView from '../views/ProjectDetailView.vue'
 import ProjectsView from '../views/ProjectsView.vue'
 import SettingsView from '../views/SettingsView.vue'
 import TasksView from '../views/TasksView.vue'
@@ -12,6 +13,7 @@ const router = createRouter({
     { path: '/', redirect: '/dashboard' },
     { path: '/dashboard', name: 'dashboard', component: DashboardView },
     { path: '/projects', name: 'projects', component: ProjectsView },
+    { path: '/projects/:id', name: 'project-detail', component: ProjectDetailView },
     { path: '/tasks', name: 'tasks', component: TasksView },
     { path: '/team', name: 'team', component: TeamView },
     { path: '/settings', name: 'settings', component: SettingsView },
