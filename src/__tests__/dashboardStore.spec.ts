@@ -13,7 +13,7 @@ describe('dashboard store', () => {
   it('derives dashboard metrics, task status summaries, and workload from mock data', () => {
     const dashboard = useDashboardStore()
 
-    expect(dashboard.activeProjectCount).toBe(3)
+    expect(dashboard.activeProjectCount).toBe(2)
     expect(dashboard.activeTaskCount).toBe(8)
     expect(dashboard.overdueTaskCount).toBe(2)
     expect(dashboard.completionRate).toBe(33)

@@ -1,14 +1,11 @@
 <script setup lang="ts">
-import type { Project, ProjectStatus } from '../../types/dashboard'
+import type { Project } from '../../types/dashboard'
+import { projectStatusLabels } from '../../utils/project'
 
 defineProps<{
   projects: Project[]
 }>()
 
-const projectStatusLabels: Record<ProjectStatus, string> = {
-  'on-track': '進度正常',
-  'at-risk': '需留意',
-}
 </script>
 
 <template>
@@ -103,11 +100,19 @@ h3 {
   margin-top: var(--space-1);
 }
 
-.project-progress__status--on-track {
+.project-progress__status--planning {
+  color: var(--color-info-strong);
+}
+
+.project-progress__status--active {
   color: var(--color-success-strong);
 }
 
-.project-progress__status--at-risk {
+.project-progress__status--completed {
+  color: var(--color-accent-strong);
+}
+
+.project-progress__status--on-hold {
   color: var(--color-warning-strong);
 }
 

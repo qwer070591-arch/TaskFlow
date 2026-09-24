@@ -1,13 +1,7 @@
 import { computed, ref } from 'vue'
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 
-import {
-  dashboardReferenceDate,
-  mockActivities,
-  mockProjects,
-  mockTasks,
-  mockTeamMembers,
-} from '../data/dashboard'
+import { dashboardReferenceDate, mockActivities } from '../data/dashboard'
 import type {
   CompletionTrendPoint,
   DashboardActivity,
@@ -16,6 +10,7 @@ import type {
   TaskStatusSummary,
   TeamWorkload,
 } from '../types/dashboard'
+import { useProjectStore } from './project'
 
 const taskStatusOrder: TaskStatus[] = ['todo', 'in-progress', 'review', 'done']
 
@@ -36,9 +31,8 @@ function formatShortDate(date: string) {
 }
 
 export const useDashboardStore = defineStore('dashboard', () => {
-  const projects = ref(mockProjects)
-  const tasks = ref(mockTasks)
-  const teamMembers = ref(mockTeamMembers)
+  const projectStore = useProjectStore()
+  const { projects, tasks, teamMembers } = storeToRefs(projectStore)
   const activities = ref(mockActivities)
 
   const dashboardTasks = computed<DashboardTask[]>(() =>
@@ -50,7 +44,9 @@ export const useDashboardStore = defineStore('dashboard', () => {
     }),
   )
 
-  const activeProjectCount = computed(() => projects.value.length)
+  const activeProjectCount = computed(
+    () => projects.value.filter((project) => project.status === 'active').length,
+  )
   const activeTaskCount = computed(
     () => tasks.value.filter((task) => task.status !== 'done').length,
   )

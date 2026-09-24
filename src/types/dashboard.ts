@@ -1,4 +1,6 @@
-export type ProjectStatus = 'on-track' | 'at-risk'
+export type ProjectStatus = 'planning' | 'active' | 'completed' | 'on-hold'
+
+export type ProjectSort = 'updated' | 'due-date' | 'name' | 'progress'
 
 export type TaskStatus = 'todo' | 'in-progress' | 'review' | 'done'
 
@@ -7,6 +9,7 @@ export type TaskPriority = 'low' | 'medium' | 'high'
 export type ActivityType = 'completed' | 'created' | 'updated' | 'moved'
 
 export interface Project {
+  description: string
   id: string
   name: string
   status: ProjectStatus
@@ -14,6 +17,7 @@ export interface Project {
   startDate: string
   dueDate: string
   memberIds: string[]
+  updatedAt: string
 }
 
 export interface Task {
@@ -66,4 +70,25 @@ export interface DashboardActivity extends Activity {
 
 export interface TeamWorkload extends TeamMember {
   activeTaskCount: number
+}
+
+export interface ProjectSummary extends Project {
+  completedTaskCount: number
+  members: TeamMember[]
+  totalTaskCount: number
+}
+
+export interface ProjectStatistics {
+  active: number
+  completed: number
+  total: number
+  upcoming: number
+}
+
+export interface CreateProjectInput {
+  description: string
+  dueDate: string
+  memberIds: string[]
+  name: string
+  startDate: string
 }
