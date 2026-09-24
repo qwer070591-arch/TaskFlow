@@ -290,3 +290,51 @@ test('keeps the team layout within the mobile viewport', async ({ page }) => {
   )
   expect(hasHorizontalOverflow).toBe(false)
 })
+
+test('updates, saves, resets, and persists frontend settings', async ({ page }) => {
+  await page.goto('/settings')
+  await page.evaluate(() => localStorage.removeItem('taskflow-settings'))
+  await page.reload()
+
+  await expect(page).toHaveURL(/\/settings$/)
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('\u8a2d\u5b9a')
+  const saveButton = page.getByRole('button', { name: '\u5132\u5b58\u8a2d\u5b9a' })
+  await expect(saveButton).toBeDisabled()
+
+  const workspaceName = page.getByLabel('\u5de5\u4f5c\u7a7a\u9593\u540d\u7a31')
+  await workspaceName.fill('\u7522\u54c1\u5718\u968a')
+  await expect(saveButton).toBeEnabled()
+  await page.getByRole('button', { name: '\u9084\u539f\u8b8a\u66f4' }).click()
+  await expect(workspaceName).toHaveValue('TaskFlow')
+  await expect(saveButton).toBeDisabled()
+
+  await workspaceName.fill('\u7522\u54c1\u5718\u968a')
+  await saveButton.click()
+  await expect(page.getByRole('status')).toHaveText('\u8a2d\u5b9a\u5df2\u5132\u5b58\u3002')
+  await expect(saveButton).toBeDisabled()
+
+  await page.reload()
+  await expect(page.getByLabel('\u5de5\u4f5c\u7a7a\u9593\u540d\u7a31')).toHaveValue('\u7522\u54c1\u5718\u968a')
+
+  await page.getByRole('tab', { name: '\u901a\u77e5\u8a2d\u5b9a' }).click()
+  const assignmentNotification = page.getByRole('checkbox', { name: /\u4efb\u52d9\u6307\u6d3e\u901a\u77e5/ })
+  await expect(assignmentNotification).toBeChecked()
+  await assignmentNotification.uncheck()
+  await expect(saveButton).toBeEnabled()
+  await saveButton.click()
+  await expect(assignmentNotification).not.toBeChecked()
+
+  await page.getByRole('tab', { name: '\u500b\u4eba\u504f\u597d' }).click()
+  await expect(page.getByLabel('\u8077\u4f4d')).toBeDisabled()
+})
+
+test('keeps the settings layout within the mobile viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/settings')
+
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('\u8a2d\u5b9a')
+  const hasHorizontalOverflow = await page.locator('html').evaluate(
+    (element) => element.scrollWidth > element.clientWidth,
+  )
+  expect(hasHorizontalOverflow).toBe(false)
+})
