@@ -50,6 +50,7 @@ defineProps<{
   box-shadow: var(--shadow-sm);
   min-width: 0;
   padding: var(--space-5);
+  position: relative;
 }
 
 .dashboard-stat-card__header {
@@ -75,6 +76,7 @@ h2 {
 .dashboard-stat-card__icon {
   align-items: center;
   background: var(--color-accent-soft);
+  border: 1px solid #dfe5ff;
   border-radius: var(--radius-md);
   color: var(--color-accent-strong);
   display: inline-flex;
@@ -96,7 +98,7 @@ h2 {
   font-weight: 750;
   letter-spacing: -0.04em;
   line-height: 1.1;
-  margin-top: var(--space-6);
+  margin-top: var(--space-5);
 }
 
 .dashboard-stat-card__detail {
@@ -104,5 +106,11 @@ h2 {
   font-size: 0.8125rem;
   line-height: 1.5;
   margin-top: var(--space-2);
+}
+
+@media (max-width: 35rem) {
+  .dashboard-stat-card {
+    padding: var(--space-4);
+  }
 }
 </style>

@@ -1,8 +1,9 @@
 :root {
-  --color-page-background: #f6f7fb;
+  --color-page-background: #f8fafc;
   --color-surface: #ffffff;
-  --color-surface-subtle: #f1f5f9;
-  --color-border: #e2e8f0;
+  --color-surface-subtle: #f4f6f9;
+  --color-border: #dfe5ed;
+  --color-border-strong: #cbd5e1;
   --color-text: #172033;
   --color-text-secondary: #475569;
   --color-text-muted: #64748b;
@@ -23,8 +24,9 @@
   --color-danger-soft: #fef2f2;
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
-  --radius-lg: 0.875rem;
-  --shadow-sm: 0 1px 2px rgb(15 23 42 / 6%);
+  --radius-lg: 0.75rem;
+  --shadow-sm: 0 1px 2px rgb(15 23 42 / 5%), 0 1px 3px rgb(15 23 42 / 3%);
+  --shadow-md: 0 8px 20px rgb(15 23 42 / 8%);
   --shadow-lg: 0 16px 40px rgb(15 23 42 / 18%);
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -36,8 +38,7 @@
   --space-8: 2rem;
   --space-10: 2.5rem;
   color: var(--color-text);
-  font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Segoe UI", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
@@ -51,8 +52,136 @@ html {
 }
 
 body {
+  color: var(--color-text);
+  line-height: 1.5;
   margin: 0;
   min-width: 20rem;
+}
+
+/* Typography refinement: a calmer four-weight hierarchy for Traditional Chinese UI. */
+body {
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+body button {
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+}
+
+body label,
+body legend {
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+}
+
+body .app-shell__main h1 {
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.24 !important;
+}
+
+body .app-shell__main :is(.dashboard__eyebrow, .projects-page__eyebrow, .tasks__header > p, .team-view__header > p, .customers-view__header > p, .opportunities-view__header > p, .settings-view__header > p) {
+  font-weight: 600 !important;
+  letter-spacing: 0.08em !important;
+}
+
+body .app-shell .app-sidebar .app-sidebar__brand {
+  font-weight: 600;
+}
+
+body .app-shell .app-sidebar .app-sidebar__navigation-link {
+  font-weight: 500 !important;
+  letter-spacing: 0;
+}
+
+body .app-shell .app-sidebar .app-sidebar__navigation-link.router-link-active {
+  font-weight: 600 !important;
+}
+
+body .app-shell .app-sidebar .app-sidebar__navigation-label,
+body .app-header .app-header__eyebrow {
+  font-weight: 600 !important;
+  letter-spacing: 0.07em !important;
+}
+
+body .app-header .app-header__title {
+  font-weight: 600 !important;
+}
+
+body .app-shell__main .dashboard-stat-card .dashboard-stat-card__header h2,
+body .app-shell__main .dashboard-panel .dashboard-panel__heading h2,
+body .app-shell__main .column h2,
+body .app-shell__main .pipeline__column h2,
+body .app-shell__main .settings-panel h2,
+body .app-shell__main .customer-detail__overview h2 {
+  font-weight: 600 !important;
+  letter-spacing: -0.01em;
+  line-height: 1.45;
+}
+
+body .app-shell__main .dashboard-stat-card .dashboard-stat-card__value,
+body .app-shell__main .projects-page__summary dd,
+body .app-shell__main .summary dd,
+body .app-shell__main .team-summary dd,
+body .app-shell__main .customers-summary dd,
+body .app-shell__main .opportunities-summary dd,
+body .app-shell__main .opportunity-card__metrics strong {
+  font-weight: 700 !important;
+  letter-spacing: -0.025em !important;
+}
+
+body .app-shell__main .project-card h2,
+body .app-shell__main .task-card h3,
+body .app-shell__main .opportunity-card h3,
+body .app-shell__main .team-member-card h2,
+body .app-shell__main .customer-table-wrap tbody th > a:first-child,
+body .app-shell__main .customer-cards header a,
+body .app-shell__main .customer-project-list h3,
+body .app-shell__main .customer-timeline h3 {
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+  line-height: 1.5;
+}
+
+body .app-shell__main .dashboard-panel p,
+body .app-shell__main .project-card p,
+body .app-shell__main .task-card p,
+body .app-shell__main .opportunity-card p,
+body .app-shell__main .team-member-card p,
+body .app-shell__main .customer-table-wrap tbody td,
+body .app-shell__main .customer-table-wrap tbody th,
+body .app-shell__main [class*='meta'],
+body .app-shell__main .project-card__details,
+body .app-shell__main .dashboard-stat-card__detail {
+  font-weight: 400 !important;
+  line-height: 1.6;
+}
+
+body .app-shell__main .customer-table-wrap thead th {
+  font-weight: 600 !important;
+  letter-spacing: 0.04em;
+}
+
+body .app-shell__main :is(.project-card__status, .task-card__badge, .column__count, .status, .customer-status, .customer-detail-header__industry, .opportunity-card__metrics span, .pipeline__column header span, .lost-opportunities header span) {
+  font-weight: 600 !important;
+  letter-spacing: 0;
+}
+
+body .app-shell__main :is(.project-card__details span, .project-card__members > span, .dashboard-stat-card__detail, .task-card__project, .task-card__meta, .opportunity-card__meta, .customer-table-wrap tbody th > a + a, .customer-table-wrap td a, .settings-panel header p, .settings-panel small) {
+  font-weight: 400 !important;
+  letter-spacing: 0;
+}
+
+body .app-shell__main .settings-navigation button,
+body .app-shell__main .settings-panel .notification-option strong {
+  font-weight: 600 !important;
+}
+
+body .app-shell__main .settings-panel .notification-option small,
+body .app-shell__main .settings-panel .theme-note p {
+  font-weight: 400 !important;
+  line-height: 1.65;
 }
 
 body.has-modal-open {
@@ -65,13 +194,37 @@ a {
 }
 
 button {
+  cursor: pointer;
   font: inherit;
 }
 
+button:disabled {
+  cursor: not-allowed;
+}
+
+input,
+select,
+textarea {
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
 button:focus-visible,
-a:focus-visible {
-  outline: 3px solid #93c5fd;
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgb(99 102 241 / 32%);
   outline-offset: 2px;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 1px var(--color-accent);
 }
 
 #app {
@@ -87,4 +240,381 @@ a:focus-visible {
   width: 1px;
   clip: rect(0 0 0 0);
   white-space: nowrap;
+}
+
+/* Product workspace: distinct navigation, workspace, section, and card layers. */
+body {
+  background:
+    radial-gradient(circle at 88% -8%, rgb(99 102 241 / 11%), transparent 25rem),
+    #eef2f7;
+}
+
+body .app-shell {
+  background: transparent;
+}
+
+body .app-shell .app-sidebar.app-sidebar {
+  background: #151b36;
+  border-right: 1px solid rgb(255 255 255 / 9%);
+  box-shadow: 10px 0 28px rgb(15 23 42 / 9%);
+  padding: 1.5rem 1rem;
+}
+
+body .app-shell .app-sidebar .app-sidebar__brand {
+  background: rgb(255 255 255 / 7%);
+  color: #fff;
+  padding: 0.75rem;
+  width: 100%;
+}
+
+body .app-shell .app-sidebar .app-sidebar__brand-mark {
+  background: #5b5ce2;
+  border: 1px solid rgb(255 255 255 / 24%);
+  box-shadow: 0 7px 18px rgb(49 46 129 / 42%);
+}
+
+body .app-shell .app-sidebar .app-sidebar__navigation {
+  margin-top: 2.25rem;
+}
+
+body .app-shell .app-sidebar .app-sidebar__navigation--secondary {
+  border-top: 1px solid rgb(255 255 255 / 9%);
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+}
+
+body .app-shell .app-sidebar .app-sidebar__navigation-label,
+body .app-shell .app-sidebar .app-sidebar__footer {
+  color: #919ab9;
+}
+
+body .app-shell .app-sidebar .app-sidebar__navigation-link {
+  align-items: center;
+  color: #c5cbe0;
+  display: flex;
+  font-size: 0.875rem;
+  gap: 0.625rem;
+  min-height: 2.75rem;
+  padding: 0.625rem 0.75rem;
+}
+
+body .app-shell .app-sidebar .app-sidebar__navigation-link::before {
+  background: currentColor;
+  border-radius: 0.25rem;
+  content: '';
+  height: 0.5rem;
+  opacity: 0.72;
+  width: 0.5rem;
+}
+
+body .app-shell .app-sidebar .app-sidebar__navigation-link:hover {
+  background: rgb(255 255 255 / 8%);
+  color: #fff;
+}
+
+body .app-shell .app-sidebar .app-sidebar__navigation-link.router-link-active {
+  background: #4f46e5;
+  box-shadow: 0 7px 15px rgb(49 46 129 / 32%);
+  color: #fff;
+}
+
+body .app-shell .app-sidebar .app-sidebar__navigation-link.router-link-active::before {
+  background: #fff;
+  opacity: 1;
+}
+
+body .app-shell .app-header.app-header {
+  background: rgb(255 255 255 / 92%);
+  box-shadow: 0 1px 0 rgb(148 163 184 / 28%);
+}
+
+body .app-shell .app-shell__main {
+  padding: clamp(1.5rem, 3vw, 3.25rem);
+}
+
+body .app-shell__main .dashboard__header.dashboard__header,
+body .app-shell__main .projects-page__header.projects-page__header,
+body .app-shell__main .tasks__header.tasks__header,
+body .app-shell__main .team-view__header.team-view__header,
+body .app-shell__main .customers-view__header.customers-view__header,
+body .app-shell__main .opportunities-view__header.opportunities-view__header,
+body .app-shell__main .settings-view__header.settings-view__header {
+  background: linear-gradient(118deg, #fff 0%, #f5f5ff 100%);
+  border: 1px solid #e0e5f1;
+  border-radius: 1.125rem;
+  box-shadow: 0 10px 28px rgb(15 23 42 / 5%);
+  padding: clamp(1.25rem, 2vw, 1.75rem);
+}
+
+body .app-shell__main .dashboard__header h1,
+body .app-shell__main .projects-page__header h1,
+body .app-shell__main .tasks__header h1,
+body .app-shell__main .team-view__header h1,
+body .app-shell__main .customers-view__header h1,
+body .app-shell__main .opportunities-view__header h1,
+body .app-shell__main .settings-view__header h1 {
+  font-size: clamp(2rem, 3.2vw, 2.75rem);
+  letter-spacing: -0.055em;
+}
+
+body .app-shell__main .projects-page__create-button,
+body .app-shell__main .tasks__header button,
+body .app-shell__main .team-view__header > button,
+body .app-shell__main .customers-view__header button,
+body .app-shell__main .opportunities-view__header > button {
+  box-shadow: 0 8px 16px rgb(79 70 229 / 24%);
+  min-height: 3rem;
+}
+
+body .app-shell__main .dashboard-stat-card.dashboard-stat-card {
+  background: linear-gradient(145deg, #fff 0%, #f5f6ff 100%);
+  border: 1px solid #dfe4f3;
+  border-radius: 1rem;
+  border-top: 4px solid #5b5ce2;
+  box-shadow: 0 12px 24px rgb(30 41 59 / 7%);
+  min-height: 10.5rem;
+  padding: 1.25rem;
+}
+
+body .app-shell__main .dashboard-stat-card .dashboard-stat-card__icon {
+  background: #e8eaff;
+  border-color: #d5d9ff;
+  border-radius: 0.75rem;
+  height: 2.75rem;
+  width: 2.75rem;
+}
+
+body .app-shell__main .dashboard-stat-card .dashboard-stat-card__value {
+  font-size: clamp(2rem, 3.25vw, 2.625rem);
+  margin-top: 1.25rem;
+}
+
+body .app-shell__main .dashboard-panel.dashboard-panel {
+  background: #fff;
+  border: 1px solid #dfe5ed;
+  border-radius: 1rem;
+  box-shadow: 0 10px 26px rgb(15 23 42 / 5%);
+  overflow: hidden;
+}
+
+body .app-shell__main .dashboard-panel .dashboard-panel__heading {
+  background: #f8f9ff;
+  border-bottom: 1px solid #e8ebf3;
+  margin: 0;
+  padding: 1.125rem 1.25rem;
+}
+
+body .app-shell__main .dashboard-panel .dashboard-panel__heading h2 {
+  font-size: 1rem;
+}
+
+body .app-shell__main .dashboard-panel .task-trend__figure,
+body .app-shell__main .dashboard-panel .task-status__list,
+body .app-shell__main .dashboard-panel .project-progress__list,
+body .app-shell__main .dashboard-panel .upcoming-tasks__list,
+body .app-shell__main .dashboard-panel .recent-activity__list,
+body .app-shell__main .dashboard-panel .team-workload__list {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+body .app-shell__main .project-toolbar.project-toolbar,
+body .app-shell__main .tasks .toolbar.toolbar,
+body .app-shell__main .team-view .team-toolbar.team-toolbar,
+body .app-shell__main .customers-view .customers-toolbar.customers-toolbar,
+body .app-shell__main .opportunities-view .opportunities-toolbar.opportunities-toolbar {
+  background: #fff;
+  border: 1px solid #dfe5ed;
+  border-radius: 1rem;
+  box-shadow: 0 10px 24px rgb(15 23 42 / 5%);
+  padding: 1rem;
+}
+
+body .app-shell__main .project-toolbar input,
+body .app-shell__main .project-toolbar select,
+body .app-shell__main .toolbar input,
+body .app-shell__main .toolbar select,
+body .app-shell__main .team-toolbar input,
+body .app-shell__main .team-toolbar select,
+body .app-shell__main .customers-toolbar input,
+body .app-shell__main .customers-toolbar select,
+body .app-shell__main .opportunities-toolbar input,
+body .app-shell__main .opportunities-toolbar select {
+  background: #f8fafc;
+  border-color: #d8e0ea;
+  min-height: 2.75rem;
+}
+
+body .app-shell__main .projects-page__summary.projects-page__summary,
+body .app-shell__main .summary.summary,
+body .app-shell__main .team-summary.team-summary,
+body .app-shell__main .customers-summary.customers-summary,
+body .app-shell__main .opportunities-summary.opportunities-summary {
+  background: #1e2851;
+  border: 0;
+  border-radius: 1rem;
+  box-shadow: 0 12px 26px rgb(30 41 59 / 18%);
+}
+
+body .app-shell__main .projects-page__summary dt,
+body .app-shell__main .summary dt,
+body .app-shell__main .team-summary dt,
+body .app-shell__main .customers-summary dt,
+body .app-shell__main .opportunities-summary dt {
+  color: #adb8d7;
+}
+
+body .app-shell__main .projects-page__summary dd,
+body .app-shell__main .summary dd,
+body .app-shell__main .team-summary dd,
+body .app-shell__main .customers-summary dd,
+body .app-shell__main .opportunities-summary dd {
+  color: #fff;
+  font-size: 1.625rem;
+}
+
+body .app-shell__main .project-card.project-card,
+body .app-shell__main .team-member-card.team-member-card {
+  border-radius: 1rem;
+  box-shadow: 0 10px 22px rgb(15 23 42 / 6%);
+}
+
+body .app-shell__main .project-card.project-card {
+  border-top: 3px solid #818cf8;
+}
+
+body .app-shell__main .task-card.task-card {
+  border-color: #dce3ee;
+  border-radius: 0.875rem;
+  box-shadow: 0 7px 14px rgb(15 23 42 / 6%);
+}
+
+body .app-shell__main .board.board {
+  background: linear-gradient(90deg, transparent calc(100% - 3.5rem), rgb(238 242 247 / 88%));
+  border-radius: 1rem;
+  gap: 1rem;
+  padding: 0.5rem 0.5rem 1rem;
+}
+
+body .app-shell__main .board .column.column {
+  background: #e9edf5;
+  border: 1px solid #dbe2ec;
+  border-radius: 1rem;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 80%);
+  padding: 1rem;
+}
+
+body .app-shell__main .board .column:nth-child(1) { border-top: 3px solid #94a3b8; }
+body .app-shell__main .board .column:nth-child(2) { border-top: 3px solid #6366f1; }
+body .app-shell__main .board .column:nth-child(3) { border-top: 3px solid #d97706; }
+body .app-shell__main .board .column:nth-child(4) { border-top: 3px solid #16a34a; }
+
+body .app-shell__main .customer-table-wrap.customer-table-wrap {
+  border-radius: 1rem;
+  box-shadow: 0 10px 24px rgb(15 23 42 / 6%);
+}
+
+body .app-shell__main .customer-table-wrap thead th {
+  background: #1e2851;
+  border-bottom-color: #1e2851;
+  color: #dbe3fb;
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+}
+
+body .app-shell__main .customer-table-wrap tbody tr:nth-child(even) {
+  background: #fafbfe;
+}
+
+body .app-shell__main .customer-table-wrap tbody tr:hover,
+body .app-shell__main .customer-table-wrap tbody tr:focus-within {
+  background: #eef0ff;
+}
+
+body .app-shell__main .pipeline.pipeline {
+  background: linear-gradient(90deg, transparent calc(100% - 3.5rem), rgb(238 242 247 / 88%));
+  border-radius: 1rem;
+  gap: 1rem;
+  padding: 0.5rem 0.5rem 1rem;
+}
+
+body .app-shell__main .pipeline .pipeline__column.pipeline__column {
+  background: #e9edf5;
+  border: 1px solid #dbe2ec;
+  border-radius: 1rem;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 80%);
+  padding: 1rem;
+}
+
+body .app-shell__main .pipeline .pipeline__column > header {
+  background: #f7f9fc;
+  border: 1px solid #dfe5ed;
+  border-radius: 0.75rem;
+  margin: -0.25rem -0.25rem 0;
+  padding: 0.75rem;
+}
+
+body .app-shell__main .pipeline .opportunity-card.opportunity-card {
+  border-color: #dce3ee;
+  border-radius: 0.875rem;
+  box-shadow: 0 7px 14px rgb(15 23 42 / 6%);
+}
+
+body .app-shell__main .settings-navigation.settings-navigation,
+body .app-shell__main .settings-panel.settings-panel {
+  border-radius: 1rem;
+  box-shadow: 0 10px 24px rgb(15 23 42 / 5%);
+}
+
+body .app-shell__main .settings-panel.settings-panel {
+  border-top: 3px solid #818cf8;
+}
+
+body .project-modal .project-modal__dialog,
+body .customer-modal .customer-modal__dialog,
+body .member-modal .member-modal__dialog,
+body .opportunity-modal > section,
+body .modal > section {
+  border: 1px solid #e0e5f1;
+  border-radius: 1rem;
+  box-shadow: 0 24px 60px rgb(15 23 42 / 28%);
+}
+
+@media (max-width: 64rem) {
+  body .app-shell .app-sidebar.app-sidebar {
+    box-shadow: 14px 0 34px rgb(15 23 42 / 24%);
+  }
+}
+
+@media (min-width: 64.0625rem) {
+  body .app-shell .app-sidebar.app-shell__desktop-sidebar {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 44rem) {
+  body .app-shell__main .dashboard__header.dashboard__header,
+  body .app-shell__main .projects-page__header.projects-page__header,
+  body .app-shell__main .tasks__header.tasks__header,
+  body .app-shell__main .team-view__header.team-view__header,
+  body .app-shell__main .customers-view__header.customers-view__header,
+  body .app-shell__main .opportunities-view__header.opportunities-view__header,
+  body .app-shell__main .settings-view__header.settings-view__header {
+    border-radius: 0.875rem;
+    padding: 1.125rem;
+  }
+
+  body .app-shell__main .board.board,
+  body .app-shell__main .pipeline.pipeline {
+    border-radius: 0.875rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }

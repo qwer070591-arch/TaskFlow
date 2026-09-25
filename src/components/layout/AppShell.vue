@@ -129,8 +129,14 @@ onBeforeUnmount(() => {
 }
 
 .app-shell__desktop-sidebar {
+  align-self: start;
   height: 100vh;
+  height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   position: sticky;
+  scrollbar-gutter: stable;
   top: 0;
 }
 
@@ -140,9 +146,9 @@ onBeforeUnmount(() => {
 
 .app-shell__main {
   margin: 0 auto;
-  max-width: 90rem;
+  max-width: 92rem;
   outline: none;
-  padding: clamp(1.5rem, 4vw, 3rem);
+  padding: clamp(1.5rem, 3vw, 2.75rem);
   width: 100%;
 }
 

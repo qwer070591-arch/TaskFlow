@@ -60,6 +60,14 @@ defineProps<{
   box-shadow: var(--shadow-sm);
   min-width: 0;
   padding: var(--space-6);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.project-card:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-md);
 }
 
 .project-card__header {
@@ -127,7 +135,7 @@ strong {
   appearance: none;
   border: 0;
   display: block;
-  height: 0.5rem;
+  height: 0.5625rem;
   margin-top: var(--space-5);
   overflow: hidden;
   width: 100%;
@@ -222,6 +230,16 @@ strong {
 
 .project-card__link:hover {
   text-decoration: underline;
+}
+
+.project-card__link:focus-visible {
+  border-radius: var(--radius-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-card {
+    transition: none;
+  }
 }
 
 @media (max-width: 31rem) {

@@ -56,6 +56,8 @@ watch(
   gap: var(--space-3);
   min-height: 4.5rem;
   padding: 0 var(--space-8);
+  position: relative;
+  z-index: 1;
 }
 
 .app-header__menu-button {
