@@ -1,5 +1,10 @@
 ﻿# TaskFlow
 
+Project Management + CRM SaaS 前端作品集專案
+
+🔗 **Live Demo:** https://task-flow-five-peach.vercel.app/  
+💻 **GitHub:** https://github.com/qwer070591-arch/TaskFlow
+
 **以 B2B 專案管理與 CRM SaaS Dashboard 為主題的純前端（frontend-only）作品集專案。**
 
 TaskFlow 整合專案、任務、團隊、客戶與銷售機會管理，是一個採用響應式設計的 B2B 工作空間介面。本專案用於展示具實務導向的 Vue 前端架構、狀態管理、無障礙設計模式與測試規劃。
@@ -23,13 +28,13 @@ TaskFlow 以 B2B 團隊的日常協作情境為設計核心，將專案進度、
 
 ## 技術棧
 
-| 領域 | 技術 |
-| --- | --- |
-| 應用程式 | Vue 3、TypeScript、Vite |
-| 路由與狀態管理 | Vue Router、Pinia |
-| 單元測試 | Vitest、Vue Test Utils、JSDOM |
-| 端對端測試 | Playwright（Chromium、Firefox、WebKit 專案） |
-| 程式碼品質 | ESLint、Oxlint、Prettier |
+| 領域           | 技術                                         |
+| -------------- | -------------------------------------------- |
+| 應用程式       | Vue 3、TypeScript、Vite                      |
+| 路由與狀態管理 | Vue Router、Pinia                            |
+| 單元測試       | Vitest、Vue Test Utils、JSDOM                |
+| 端對端測試     | Playwright（Chromium、Firefox、WebKit 專案） |
+| 程式碼品質     | ESLint、Oxlint、Prettier                     |
 
 ## 專案架構
 
@@ -43,18 +48,18 @@ TaskFlow 使用 Vue Single-File Components，並採用 `<script setup lang="ts">
 
 ## 路由
 
-| 路由 | 用途 |
-| --- | --- |
-| `/` | 重新導向至 Dashboard |
-| `/dashboard` | 工作空間總覽與營運摘要 |
-| `/projects` | 專案列表、篩選、排序與建立 |
-| `/projects/:id` | 專案總覽、任務、成員與活動紀錄 |
-| `/tasks` | 可篩選的 Kanban 任務看板 |
-| `/team` | 團隊目錄、工作負載篩選與成員詳細資料 |
-| `/customers` | CRM 客戶列表，支援響應式表格／卡片呈現 |
-| `/customers/:id` | 客戶檔案、活動、聯絡資訊與相關專案 |
-| `/opportunities` | 銷售管線與失敗銷售機會檢視 |
-| `/settings` | 工作空間、個人與通知偏好設定 |
+| 路由             | 用途                                   |
+| ---------------- | -------------------------------------- |
+| `/`              | 重新導向至 Dashboard                   |
+| `/dashboard`     | 工作空間總覽與營運摘要                 |
+| `/projects`      | 專案列表、篩選、排序與建立             |
+| `/projects/:id`  | 專案總覽、任務、成員與活動紀錄         |
+| `/tasks`         | 可篩選的 Kanban 任務看板               |
+| `/team`          | 團隊目錄、工作負載篩選與成員詳細資料   |
+| `/customers`     | CRM 客戶列表，支援響應式表格／卡片呈現 |
+| `/customers/:id` | 客戶檔案、活動、聯絡資訊與相關專案     |
+| `/opportunities` | 銷售管線與失敗銷售機會檢視             |
+| `/settings`      | 工作空間、個人與通知偏好設定           |
 
 ## 響應式設計
 
@@ -192,5 +197,3 @@ src/__tests__/        # Vitest 單元測試
 ## 作者 / Portfolio
 
 此專案為個人前端作品集專案。
-
-
