@@ -338,3 +338,69 @@ test('keeps the settings layout within the mobile viewport', async ({ page }) =>
   )
   expect(hasHorizontalOverflow).toBe(false)
 })
+
+test('navigates, filters, sorts, and creates customers', async ({ page }) => {
+  await page.goto('/dashboard')
+  await page.getByRole('link', { name: '\u5ba2\u6236' }).click()
+
+  await expect(page).toHaveURL(/\/customers$/)
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('\u5ba2\u6236')
+  const customerTable = page.getByRole('table')
+  await expect(customerTable).toBeVisible()
+  await expect(customerTable.getByRole('row')).toHaveCount(9)
+
+  await page.getByLabel('\u641c\u5c0b\u5ba2\u6236').fill('Nova Labs')
+  await expect(customerTable.getByRole('row')).toHaveCount(2)
+  await page.getByLabel('\u641c\u5c0b\u5ba2\u6236').fill('')
+
+  await page.getByRole('combobox', { name: '\u72c0\u614b', exact: true }).selectOption('lead')
+  await expect(customerTable.getByRole('row')).toHaveCount(3)
+  await page.getByRole('combobox', { name: '\u72c0\u614b', exact: true }).selectOption('all')
+
+  await page.getByRole('combobox', { name: '\u7522\u696d', exact: true }).selectOption('\u8a2d\u8a08')
+  await expect(customerTable.getByRole('row')).toHaveCount(3)
+  await page.getByRole('combobox', { name: '\u7522\u696d', exact: true }).selectOption('all')
+
+  await page.getByRole('combobox', { name: '\u6392\u5e8f', exact: true }).selectOption('company')
+  await expect(customerTable.locator('tbody tr').first()).toContainText('Apex Solutions')
+
+  const createButton = page.getByRole('button', { name: '\u65b0\u589e\u5ba2\u6236' })
+  await createButton.click()
+  const dialog = page.getByRole('dialog', { name: '\u65b0\u589e\u5ba2\u6236' })
+  await expect(dialog).toBeVisible()
+  await dialog.getByRole('button', { name: '\u5efa\u7acb\u5ba2\u6236' }).click()
+  await expect(dialog.getByRole('alert')).toHaveCount(4)
+
+  await dialog.getByLabel('\u5ba2\u6236\u540d\u7a31').fill('Skyline Works')
+  await dialog.getByLabel('\u806f\u7d61\u4eba').fill('Iris Chen')
+  await dialog.getByLabel('\u96fb\u5b50\u90f5\u4ef6').fill('not-an-email')
+  await dialog.getByLabel('\u7522\u696d').fill('\u79d1\u6280')
+  await dialog.getByRole('button', { name: '\u5efa\u7acb\u5ba2\u6236' }).click()
+  await expect(dialog.getByLabel('\u96fb\u5b50\u90f5\u4ef6')).toHaveAttribute('aria-invalid', 'true')
+
+  await dialog.getByLabel('\u96fb\u5b50\u90f5\u4ef6').fill('iris@skyline.works')
+  await dialog.getByLabel('\u5ba2\u6236\u72c0\u614b').selectOption('active')
+  await dialog.getByRole('button', { name: '\u5efa\u7acb\u5ba2\u6236' }).click()
+  await expect(dialog).toBeHidden()
+  await expect(page.getByRole('status')).toBeVisible()
+  await expect(customerTable.locator('tbody tr').filter({ hasText: 'Skyline Works' })).toBeVisible()
+
+  await createButton.click()
+  await expect(dialog).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect(dialog).toBeHidden()
+  await expect(createButton).toBeFocused()
+})
+
+test('keeps customer cards and the application shell within the mobile viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/customers')
+
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('\u5ba2\u6236')
+  await expect(page.getByRole('region', { name: '\u5ba2\u6236\u5361\u7247' }).getByRole('article')).toHaveCount(8)
+  await expect(page.getByRole('table')).toBeHidden()
+  const hasHorizontalOverflow = await page.locator('html').evaluate(
+    (element) => element.scrollWidth > element.clientWidth,
+  )
+  expect(hasHorizontalOverflow).toBe(false)
+})

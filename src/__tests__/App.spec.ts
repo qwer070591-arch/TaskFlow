@@ -1,14 +1,14 @@
-import { describe, it, expect } from 'vitest'
-
+import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { createMemoryHistory, createRouter } from 'vue-router'
+
 import App from '../App.vue'
 
 describe('App', () => {
   it('renders the application shell and dashboard route', async () => {
     const router = createRouter({
       history: createMemoryHistory(),
-      routes: [{ path: '/dashboard', component: { template: '<h1>儀表板</h1>' } }],
+      routes: [{ path: '/dashboard', component: { template: '<h1>\u5100\u8868\u677f</h1>' } }],
     })
 
     await router.push('/dashboard')
@@ -20,7 +20,7 @@ describe('App', () => {
       },
     })
 
-    expect(wrapper.get('nav[aria-label="主要導覽"]').text()).toContain('專案')
-    expect(wrapper.get('h1').text()).toBe('儀表板')
+    expect(wrapper.get('nav[aria-label="\u4e3b\u8981\u5c0e\u822a"]').text()).toContain('\u5c08\u6848')
+    expect(wrapper.get('h1').text()).toBe('\u5100\u8868\u677f')
   })
 })
