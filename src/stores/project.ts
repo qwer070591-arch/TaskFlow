@@ -22,12 +22,12 @@ import type {
   ProjectTask,
   TaskBoardItem,
   TaskPriority,
-  TaskStatus,
   TeamMemberOverview,
   TeamStatistics,
   WorkloadLevel,
 } from '../types/dashboard'
 import { getInitials, getWorkloadLevel } from '../utils/team'
+import { isTaskStatus } from '../utils/task'
 
 const upcomingProjectCutoff = '2026-10-09'
 
@@ -161,6 +161,10 @@ export const useProjectStore = defineStore('project', () => {
   }
 
   function createTask(input: CreateTaskInput) {
+    const projectExists = projects.value.some((project) => project.id === input.projectId)
+    const assigneeExists = teamMembers.value.some((member) => member.id === input.assigneeId)
+    if (!projectExists || !assigneeExists || !isTaskStatus(input.status)) return null
+
     const task = { id: `task-${crypto.randomUUID()}`, ...input, completedAt: input.status === 'done' ? dashboardReferenceDate : undefined }
     tasks.value.unshift(task)
     return task
@@ -179,9 +183,9 @@ export const useProjectStore = defineStore('project', () => {
     return member
   }
 
-  function updateTaskStatus(taskId: string, status: TaskStatus) {
+  function updateTaskStatus(taskId: string, status: unknown) {
     const task = tasks.value.find((item) => item.id === taskId)
-    if (!task) return false
+    if (!task || !isTaskStatus(status)) return false
     task.status = status
     task.completedAt = status === 'done' ? dashboardReferenceDate : undefined
     return true

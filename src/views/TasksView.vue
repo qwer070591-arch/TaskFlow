@@ -28,7 +28,7 @@ function startDrag(taskId: string) { dragged.value = taskId }
 function endDrag() { dragged.value = null; dragOverStatus.value = null }
 function handleDrop(status: TaskStatus) { if (dragged.value) changeStatus(dragged.value, status); endDrag() }
 function closeModal() { modal.value = false; void nextTick(() => createButton.value?.focus()) }
-function createTask(input: CreateTaskInput) { const task = store.createTask(input); showFeedback(`已建立任務「${task.title}」。`); closeModal() }
+function createTask(input: CreateTaskInput) { const task = store.createTask(input); if (!task) { showFeedback('無法建立任務，請確認專案、負責人與狀態。'); return }; showFeedback(`已建立任務「${task.title}」。`); closeModal() }
 
 watch(modal, (isOpen) => document.body.classList.toggle('has-modal-open', isOpen))
 onBeforeUnmount(() => { document.body.classList.remove('has-modal-open'); if (feedbackTimer) window.clearTimeout(feedbackTimer) })

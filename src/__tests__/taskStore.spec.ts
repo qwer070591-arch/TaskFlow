@@ -3,6 +3,7 @@ import { createPinia, setActivePinia } from 'pinia'
 
 import { dashboardReferenceDate } from '../data/dashboard'
 import { useProjectStore } from '../stores/project'
+import type { CreateTaskInput, TaskStatus } from '../types/dashboard'
 
 describe('task state in the project store', () => {
   beforeEach(() => {
@@ -64,12 +65,40 @@ describe('task state in the project store', () => {
       status: 'todo',
     })
 
-    expect(store.tasks[0]).toMatchObject({ id: created.id, title: '\u6e2c\u8a66\u65b0\u4efb\u52d9', completedAt: undefined })
+    expect(created).not.toBeNull()
+    expect(store.tasks[0]).toMatchObject({ id: created?.id, title: '\u6e2c\u8a66\u65b0\u4efb\u52d9', completedAt: undefined })
     expect(store.taskStatistics.total).toBe(13)
-    expect(store.updateTaskStatus(created.id, 'done')).toBe(true)
+    expect(store.updateTaskStatus(created?.id ?? '', 'done')).toBe(true)
     expect(store.tasks[0]).toMatchObject({ status: 'done', completedAt: dashboardReferenceDate })
-    expect(store.updateTaskStatus(created.id, 'review')).toBe(true)
+    expect(store.updateTaskStatus(created?.id ?? '', 'review')).toBe(true)
     expect(store.tasks[0]).toMatchObject({ status: 'review', completedAt: undefined })
     expect(store.updateTaskStatus('missing-task', 'done')).toBe(false)
+  })
+
+  it('rejects task creation when relationships or the runtime status are invalid', () => {
+    const store = useProjectStore()
+    const validInput: CreateTaskInput = {
+      title: '驗證任務',
+      projectId: 'project-brand-site',
+      assigneeId: 'member-lin',
+      priority: 'medium',
+      dueDate: '2026-10-10',
+      status: 'todo',
+    }
+    const initialTaskCount = store.tasks.length
+
+    expect(store.createTask({ ...validInput, projectId: 'missing-project' })).toBeNull()
+    expect(store.createTask({ ...validInput, assigneeId: 'missing-member' })).toBeNull()
+    expect(store.createTask({ ...validInput, status: 'invalid' as TaskStatus })).toBeNull()
+    expect(store.tasks).toHaveLength(initialTaskCount)
+  })
+
+  it('rejects an invalid runtime status without mutating the task', () => {
+    const store = useProjectStore()
+    const task = store.tasks.find((item) => item.id === 'task-1')
+    const originalTask = task ? { ...task } : undefined
+
+    expect(store.updateTaskStatus('task-1', 'invalid')).toBe(false)
+    expect(task).toEqual(originalTask)
   })
 })

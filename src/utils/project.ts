@@ -1,4 +1,5 @@
 import type { ProjectStatus } from '../types/dashboard'
+import { getValidIsoDate } from './date'
 
 type ProjectHealth = 'normal' | 'upcoming' | 'overdue' | 'completed' | 'on-hold'
 
@@ -9,13 +10,16 @@ export const projectStatusLabels: Record<ProjectStatus, string> = {
   'on-hold': '暫停',
 }
 
-export function formatProjectDate(date: string) {
+export function formatProjectDate(date?: string) {
+  const validDate = getValidIsoDate(date)
+  if (!validDate) return '—'
+
   return new Intl.DateTimeFormat('zh-TW', {
     year: 'numeric',
     month: 'numeric',
     day: 'numeric',
     timeZone: 'UTC',
-  }).format(new Date(`${date}T00:00:00Z`))
+  }).format(new Date(`${validDate}T00:00:00Z`))
 }
 
 export const projectHealthLabels: Record<ProjectHealth, string> = {

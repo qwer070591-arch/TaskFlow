@@ -1,4 +1,5 @@
 import type { CustomerActivityType, CustomerStatus } from '../types/customer'
+import { getValidIsoDate } from './date'
 
 export const customerStatusLabels: Record<CustomerStatus, string> = {
   lead: '潛在客戶',
@@ -14,9 +15,10 @@ export const customerActivityTypeLabels: Record<CustomerActivityType, string> = 
 }
 
 export function formatCustomerDate(date?: string) {
-  if (!date) return '—'
+  const validDate = getValidIsoDate(date)
+  if (!validDate) return '—'
   return new Intl.DateTimeFormat('zh-TW', { year: 'numeric', month: 'numeric', day: 'numeric', timeZone: 'UTC' })
-    .format(new Date(`${date.slice(0, 10)}T00:00:00Z`))
+    .format(new Date(`${validDate}T00:00:00Z`))
 }
 
 export function isValidCustomerEmail(email: string) {

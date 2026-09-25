@@ -7,6 +7,10 @@ export const taskStatusLabels: Record<TaskStatus, string> = {
   done: '已完成',
 }
 
+export function isTaskStatus(status: unknown): status is TaskStatus {
+  return typeof status === 'string' && Object.prototype.hasOwnProperty.call(taskStatusLabels, status)
+}
+
 export const taskPriorityLabels: Record<TaskPriority, string> = {
   low: '低',
   medium: '中',
