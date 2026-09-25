@@ -125,4 +125,10 @@ select:focus-visible {
     padding: var(--space-3);
   }
 }
+
+@media (max-width: 34rem) {
+  .summary dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 </style>

@@ -253,7 +253,7 @@ dd {
   }
 }
 
-@media (max-width: 40rem) {
+@media (max-width: 48rem) {
   .projects-page__header {
     align-items: flex-start;
     flex-direction: column;

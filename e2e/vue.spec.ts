@@ -448,3 +448,129 @@ test('keeps customer detail within the mobile viewport', async ({ page }) => {
   )
   expect(hasHorizontalOverflow).toBe(false)
 })
+
+test('manages sales opportunities through the pipeline', async ({ page }) => {
+  await page.goto('/dashboard')
+  await page.getByRole('link', { name: '\u92b7\u552e\u6a5f\u6703' }).click()
+  await expect(page).toHaveURL(/\/opportunities$/)
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('\u92b7\u552e\u6a5f\u6703')
+  await expect(page.getByRole('region', { name: '\u92b7\u552e Pipeline' }).locator('.pipeline__column')).toHaveCount(5)
+
+  await page.getByLabel('\u641c\u5c0b\u5546\u6a5f').fill('onboarding')
+  await expect(page.locator('.pipeline__column').getByRole('article')).toHaveCount(1)
+  await page.getByLabel('\u641c\u5c0b\u5546\u6a5f').fill('')
+  await page.getByLabel('\u5ba2\u6236\u7be9\u9078').selectOption('customer-nova')
+  await expect(page.locator('.pipeline__column').getByRole('article')).toHaveCount(1)
+  await page.getByRole('button', { name: '\u6e05\u9664\u7be9\u9078' }).click()
+  await page.getByLabel('\u8ca0\u8cac\u4eba\u7be9\u9078').selectOption('member-wang')
+  await expect(page.locator('.pipeline__column').getByRole('article')).toHaveCount(2)
+  await page.getByRole('button', { name: '\u6e05\u9664\u7be9\u9078' }).click()
+
+  const createButton = page.getByRole('button', { name: '\u65b0\u589e\u5546\u6a5f' })
+  await createButton.click()
+  const dialog = page.getByRole('dialog', { name: '\u65b0\u589e\u5546\u6a5f' })
+  await dialog.getByRole('button', { name: '\u5efa\u7acb\u5546\u6a5f' }).click()
+  await expect(dialog.getByRole('alert')).toBeVisible()
+  await dialog.getByLabel('\u5546\u6a5f\u540d\u7a31').fill('\u6e2c\u8a66\u63d0\u6848')
+  await dialog.getByLabel('\u5ba2\u6236').selectOption('customer-nova')
+  await dialog.getByLabel('\u9810\u4f30\u91d1\u984d').fill('100000')
+  await dialog.getByLabel('Pipeline \u968e\u6bb5').selectOption('proposal')
+  await dialog.getByLabel('\u9810\u8a08\u6210\u4ea4\u65e5\u671f').fill('2026-11-12')
+  await dialog.getByLabel('\u8ca0\u8cac\u4eba').selectOption('member-lin')
+  await dialog.getByRole('button', { name: '\u5efa\u7acb\u5546\u6a5f' }).click()
+  await expect(dialog).toBeHidden()
+  const created = page.getByRole('article').filter({ hasText: '\u6e2c\u8a66\u63d0\u6848' })
+  await expect(created).toBeVisible()
+
+  await created.getByRole('button', { name: /\u8b8a\u66f4.*\u968e\u6bb5/ }).click()
+  await created.getByRole('menuitem', { name: '\u79fb\u81f3\u6210\u4ea4' }).click()
+  await expect(created).toContainText('100%')
+
+  await page.getByLabel('\u986f\u793a\u5931\u6557\u5546\u6a5f').check()
+  const lostSection = page.getByRole('region', { name: /\u5931\u6557\u5546\u6a5f/ })
+  await expect(lostSection).toBeVisible()
+  await lostSection.getByRole('button', { name: '\u91cd\u65b0\u555f\u7528' }).click()
+  await expect(page.locator('.pipeline__column').getByRole('article').filter({ hasText: '\u7cfb\u7d71\u6574\u5408\u8a55\u4f30\u6848' })).toBeVisible()
+
+  const leadCard = page.getByRole('article').filter({ hasText: '\u5e74\u5ea6\u5a92\u9ad4\u7b56\u7565\u63d0\u6848' })
+  const contactedColumn = page.locator('.pipeline__column').filter({ hasText: /^\u5df2\u806f\u7d61/ })
+  await leadCard.dispatchEvent('dragstart')
+  await contactedColumn.dispatchEvent('drop')
+  await expect(leadCard.getByRole('button', { name: /\u8b8a\u66f4.*\u968e\u6bb5/ })).toBeVisible()
+
+  await createButton.click()
+  await page.keyboard.press('Escape')
+  await expect(dialog).toBeHidden()
+  await expect(createButton).toBeFocused()
+})
+
+test('keeps the application shell contained while the mobile pipeline scrolls horizontally', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/opportunities')
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('\u92b7\u552e\u6a5f\u6703')
+  const pipelineScrolls = await page.locator('.pipeline').evaluate((element) => element.scrollWidth > element.clientWidth)
+  expect(pipelineScrolls).toBe(true)
+  const hasHorizontalOverflow = await page.locator('html').evaluate((element) => element.scrollWidth > element.clientWidth)
+  expect(hasHorizontalOverflow).toBe(false)
+})
+
+test('uses the accessible navigation drawer at tablet widths without clipping the project action', async ({ page }) => {
+  const menuButton = page.locator('.app-header__menu-button')
+  const createButton = page.getByRole('button', { name: '\u65b0\u589e\u5c08\u6848' })
+
+  await page.setViewportSize({ width: 1024, height: 900 })
+  await page.goto('/projects')
+  await expect(menuButton).toBeVisible()
+  await expect(page.locator('.app-shell__desktop-sidebar')).toBeHidden()
+  await expect(createButton).toBeVisible()
+  expect((await createButton.boundingBox())?.x ?? 1025).toBeLessThan(1024)
+
+  await menuButton.click()
+  await expect(page.locator('.mobile-navigation__drawer')).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect(page.locator('.mobile-navigation__drawer')).toBeHidden()
+  await expect(menuButton).toBeFocused()
+
+  await page.setViewportSize({ width: 768, height: 900 })
+  await page.goto('/projects')
+  await expect(menuButton).toBeVisible()
+  await expect(createButton).toBeVisible()
+  expect((await createButton.boundingBox())?.x ?? 769).toBeLessThan(768)
+  expect(await page.locator('html').evaluate((element) => element.scrollWidth > element.clientWidth)).toBe(false)
+})
+
+test('uses a two-column task summary at a 390px viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/tasks')
+
+  const summaryItems = page.getByRole('region', { name: '\u4efb\u52d9\u6458\u8981' }).locator('dl > div')
+  const positions = await summaryItems.evaluateAll((items) =>
+    items.map((item) => Math.round(item.getBoundingClientRect().top)),
+  )
+
+  expect(positions[0]).toBe(positions[1])
+  expect(positions[2]).toBeGreaterThan(positions[0] ?? 0)
+})
+
+test('formats opportunity values as explicit TWD and keeps pipeline scrolling contained', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/opportunities')
+
+  await expect(page.getByText('NT$1,810,000', { exact: true })).toBeVisible()
+  await expect(page.locator('.pipeline-scroll-hint')).toBeVisible()
+  expect(await page.locator('.pipeline').evaluate((element) => element.scrollWidth > element.clientWidth)).toBe(true)
+  expect(await page.locator('html').evaluate((element) => element.scrollWidth > element.clientWidth)).toBe(false)
+})
+
+test('provides a 44px mobile touch target for the lost opportunities checkbox', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/opportunities')
+
+  const checkbox = page.getByRole('checkbox', { name: '\u986f\u793a\u5931\u6557\u5546\u6a5f' })
+  const toggle = checkbox.locator('xpath=..')
+  expect((await toggle.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(44)
+  await checkbox.focus()
+  await page.keyboard.press('Space')
+  await expect(checkbox).toBeChecked()
+  await expect(page.getByRole('region', { name: /\u5931\u6557\u5546\u6a5f/ })).toBeVisible()
+})

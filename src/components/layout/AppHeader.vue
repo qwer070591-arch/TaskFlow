@@ -118,7 +118,7 @@ watch(
   width: 0.5rem;
 }
 
-@media (max-width: 47.9375rem) {
+@media (max-width: 64rem) {
   .app-header {
     min-height: 4rem;
     padding: 0 var(--space-4);

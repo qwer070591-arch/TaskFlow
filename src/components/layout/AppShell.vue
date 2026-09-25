@@ -221,7 +221,7 @@ onBeforeUnmount(() => {
   transform: translateX(-100%);
 }
 
-@media (max-width: 47.9375rem) {
+@media (max-width: 64rem) {
   .app-shell {
     display: block;
   }

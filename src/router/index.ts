@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import DashboardView from '../views/DashboardView.vue'
 import CustomerDetailView from '../views/CustomerDetailView.vue'
 import CustomersView from '../views/CustomersView.vue'
+import OpportunitiesView from '../views/OpportunitiesView.vue'
 import ProjectDetailView from '../views/ProjectDetailView.vue'
 import ProjectsView from '../views/ProjectsView.vue'
 import SettingsView from '../views/SettingsView.vue'
@@ -20,6 +21,7 @@ const router = createRouter({
     { path: '/team', name: 'team', component: TeamView },
     { path: '/customers', name: 'customers', component: CustomersView },
     { path: '/customers/:id', name: 'customer-detail', component: CustomerDetailView },
+    { path: '/opportunities', name: 'opportunities', component: OpportunitiesView },
     { path: '/settings', name: 'settings', component: SettingsView },
   ],
 })
