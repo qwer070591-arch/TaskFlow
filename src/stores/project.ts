@@ -219,6 +219,10 @@ export const useProjectStore = defineStore('project', () => {
     return projects.value.filter((project) => project.memberIds.includes(memberId))
   }
 
+  function getProjectsByCustomer(customerId: string) {
+    return projects.value.filter((project) => project.customerId === customerId)
+  }
+
   function getTasksByMember(memberId: string) {
     return tasks.value.filter((task) => task.assigneeId === memberId)
   }
@@ -286,6 +290,7 @@ export const useProjectStore = defineStore('project', () => {
     getMemberOverview,
     getMembersByProject,
     getProjectsByMember,
+    getProjectsByCustomer,
     getTasksByMember,
     getOverviewByProject,
     getProjectById,

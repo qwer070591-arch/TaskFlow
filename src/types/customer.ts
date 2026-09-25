@@ -2,6 +2,8 @@ export type CustomerStatus = 'lead' | 'active' | 'inactive'
 
 export type CustomerSort = 'last-contact' | 'created' | 'company'
 
+export type CustomerActivityType = 'call' | 'email' | 'meeting' | 'note'
+
 export interface Customer {
   companyName: string
   contactName: string
@@ -28,4 +30,13 @@ export interface CustomerStatistics {
   inactive: number
   lead: number
   total: number
+}
+
+export interface CustomerActivity {
+  customerId: string
+  description: string
+  id: string
+  occurredAt: string
+  title: string
+  type: CustomerActivityType
 }

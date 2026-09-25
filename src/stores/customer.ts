@@ -1,11 +1,18 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
-import { mockCustomers } from '../data/customers'
-import type { CreateCustomerInput, CustomerSort, CustomerStatistics, CustomerStatus } from '../types/customer'
+import { mockCustomerActivities, mockCustomers } from '../data/customers'
+import type {
+  CreateCustomerInput,
+  CustomerActivity,
+  CustomerSort,
+  CustomerStatistics,
+  CustomerStatus,
+} from '../types/customer'
 
 export const useCustomerStore = defineStore('customer', () => {
   const customers = ref([...mockCustomers])
+  const activities = ref<CustomerActivity[]>([...mockCustomerActivities])
   const searchQuery = ref('')
   const statusFilter = ref<CustomerStatus | 'all'>('all')
   const industryFilter = ref('all')
@@ -46,5 +53,29 @@ export const useCustomerStore = defineStore('customer', () => {
     return customer
   }
 
-  return { clearFilters, createCustomer, customers, filteredCustomers, industries, industryFilter, searchQuery, sortBy, statistics, statusFilter }
+  function getCustomerById(customerId: string) {
+    return customers.value.find((customer) => customer.id === customerId)
+  }
+
+  function getActivitiesByCustomer(customerId: string) {
+    return activities.value
+      .filter((activity) => activity.customerId === customerId)
+      .sort((first, second) => second.occurredAt.localeCompare(first.occurredAt))
+  }
+
+  return {
+    activities,
+    clearFilters,
+    createCustomer,
+    customers,
+    filteredCustomers,
+    getActivitiesByCustomer,
+    getCustomerById,
+    industries,
+    industryFilter,
+    searchQuery,
+    sortBy,
+    statistics,
+    statusFilter,
+  }
 })

@@ -9,6 +9,7 @@ export type TaskPriority = 'low' | 'medium' | 'high'
 export type ActivityType = 'completed' | 'created' | 'updated' | 'moved'
 
 export interface Project {
+  customerId?: string
   description: string
   id: string
   name: string

@@ -5,6 +5,7 @@ export const dashboardReferenceDate = '2026-09-25'
 export const mockProjects: Project[] = [
   {
     id: 'project-brand-site',
+    customerId: 'customer-nova',
     name: '品牌網站改版',
     description: '企業官網重新設計與前端開發。',
     status: 'active',
@@ -16,6 +17,7 @@ export const mockProjects: Project[] = [
   },
   {
     id: 'project-mobile-onboarding',
+    customerId: 'customer-vertex',
     name: '行動版新手引導',
     description: '優化新用戶首次使用產品時的關鍵流程。',
     status: 'active',
@@ -27,6 +29,7 @@ export const mockProjects: Project[] = [
   },
   {
     id: 'project-content-hub',
+    customerId: 'customer-lumina',
     name: '內容中心優化',
     description: '建立可持續擴充的內容策略與發布體驗。',
     status: 'planning',
@@ -38,6 +41,7 @@ export const mockProjects: Project[] = [
   },
   {
     id: 'project-design-system',
+    customerId: 'customer-pixelcraft',
     name: '設計系統盤點',
     description: '完成元件盤點與設計規範文件整理。',
     status: 'completed',

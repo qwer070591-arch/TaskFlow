@@ -65,4 +65,12 @@ describe('project store', () => {
     expect(projectStore.getProjectById('missing-project')).toBeUndefined()
     expect(projectStore.getOverviewByProject('missing-project')).toBeUndefined()
   })
+  it('selects projects through the optional customer relationship without duplicating project state', () => {
+    const projectStore = useProjectStore()
+
+    expect(projectStore.getProjectsByCustomer('customer-nova').map((project) => project.id)).toEqual([
+      'project-brand-site',
+    ])
+    expect(projectStore.getProjectsByCustomer('customer-brightline')).toEqual([])
+  })
 })

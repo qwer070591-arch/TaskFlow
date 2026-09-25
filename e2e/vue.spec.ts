@@ -404,3 +404,47 @@ test('keeps customer cards and the application shell within the mobile viewport'
   )
   expect(hasHorizontalOverflow).toBe(false)
 })
+
+test('opens customer detail with activities and related project navigation', async ({ page }) => {
+  await page.goto('/customers')
+  await page.getByRole('link', { name: 'Nova Labs', exact: true }).click()
+
+  await expect(page).toHaveURL(/\/customers\/customer-nova$/)
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Nova Labs')
+  await expect(page.locator('.customer-detail-header__meta').getByText('\u6f5b\u5728\u5ba2\u6236', { exact: true })).toBeVisible()
+  await expect(page.getByText('Olivia Chen', { exact: true })).toBeVisible()
+  await expect(page.getByRole('link', { name: 'olivia@novalabs.io' })).toHaveAttribute(
+    'href',
+    'mailto:olivia@novalabs.io',
+  )
+
+  const timeline = page.locator('.customer-timeline')
+  await expect(timeline.getByRole('heading', { name: '\u5ba2\u6236\u6d3b\u52d5' })).toBeVisible()
+  await expect(timeline.getByRole('listitem')).toHaveCount(3)
+  await expect(timeline.getByRole('listitem').first()).toContainText('\u8a0e\u8ad6 Nova Labs \u7684 Q4 \u5c08\u6848\u65b9\u5411')
+
+  const projectList = page.locator('.customer-project-list')
+  await expect(projectList.getByRole('heading', { name: '\u76f8\u95dc\u5c08\u6848' })).toBeVisible()
+  await expect(projectList.getByRole('link')).toHaveAttribute('href', '/projects/project-brand-site')
+  await projectList.getByRole('link').click()
+  await expect(page).toHaveURL(/\/projects\/project-brand-site$/)
+
+  await page.goto('/customers/customer-nova')
+  await page.getByRole('link', { name: '\u8fd4\u56de\u5ba2\u6236' }).click()
+  await expect(page).toHaveURL(/\/customers$/)
+
+  await page.goto('/customers/missing-customer')
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('\u627e\u4e0d\u5230\u6b64\u5ba2\u6236')
+  await expect(page.getByRole('link', { name: '\u8fd4\u56de\u5ba2\u6236\u5217\u8868' })).toBeVisible()
+})
+
+test('keeps customer detail within the mobile viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/customers/customer-nova')
+
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Nova Labs')
+  const hasHorizontalOverflow = await page.locator('html').evaluate(
+    (element) => element.scrollWidth > element.clientWidth,
+  )
+  expect(hasHorizontalOverflow).toBe(false)
+})
